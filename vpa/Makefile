@@ -1,3 +1,4 @@
+POD_NAME := $(shell kubectl get pods | grep "apache" | awk '{print $$1}')
 
 run:
 	kubectl apply -f php-deployment.yaml
@@ -9,11 +10,7 @@ load:
 	kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
 
 watch:
-	watch -d kubectl get hpa php-apache
+	watch -d kubectl top pod $(POD_NAME)
 
-clean: clean-php
-
-clean-php:
-	kubectl delete hpa php-apache || true
-	kubectl delete service php-apache || true
-	kubectl delete deployment.apps/php-apache || true
+info:
+	kubectl describe pod $(POD_NAME)
