@@ -28,62 +28,13 @@ Autoscaling is configured with a Custom Resource Definition object called Vertic
 
 ## The Kubernetes Cluster Autoscaler
 
+The Cluster Autoscaler automatically adds or removes nodes in a cluster based on resource requests from pods. The Cluster Autoscaler doesn’t directly measure CPU and memory usage values to make a scaling decision. Instead, it checks every 10 seconds to detect any pods in a pending state, suggesting that the scheduler could not assign them to a node due to insufficient cluster capacity.
 
+this option is not in this demo as I will need admin access to VIO cloud to demo this option.
 
-
+![Cluster Autoscaler](./images/ca-process.png)
 
 export KUBECONFIG=/root/demo_kube_config
-
-kubectl apply -f nginx-deployment.yaml
-
-
-installing the VPA:
-
-$ git clone https://github.com/kubernetes/autoscaler.git
-$ cd autoscaler/vertical-pod-autoscaler
-$ ./hack/vpa-up.sh
-
-
-$ kubectl apply -f nginx-deployment-vpa.yaml
-
-
-$ kubectl get vpa
-NAME                   MODE   CPU   MEM       PROVIDED   AGE
-nginx-deployment-vpa   Auto   25m   262144k   True       6m27s
-
-$ kubectl describe vpa nginx-deployment-vpa
-
-
-```yaml
-Recommendation:
-  Container Recommendations:
-    Container Name:  nginx
-    Lower Bound:
-      Cpu:     25m
-      Memory:  262144k
-    Target:
-      Cpu:     25m
-      Memory:  262144k
-    Uncapped Target:
-      Cpu:     25m
-      Memory:  262144k
-    Upper Bound:
-      Cpu:     6703m
-      Memory:  7008683098
-```
-
-
-
-
-------------------   kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh
-
-
-
-
-kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
-
-
-
 
 
 ## for more info
